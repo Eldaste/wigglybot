@@ -68,19 +68,27 @@ async def on_message(message):
                   msgb = '\n'.join(map(str,norm_dict.get(pk)))
                   msg=msga+':\n'+msgb
                   msg+="Please note that these values may not be completely correct!"
-            else:
-                if(words[1]!='G' and words[1]!='g'):
+            elif(words[1]=='G' or words[1]=='g'):
+                  #it's GMax
+                  pk = words[2].capitalize()
+                  if pk not in gm_dict:
                     msg="Invalid input!"
+                  else:
+                    msga = 'Here are the ball catch rates for Gigantamax '+pk
+                    msgb = '\n'.join(map(str,gm_dict.get(pk)))
+                    msg=msga+':\n'+msgb
+                    msg+="Please note that these values may not be completely correct!"
+            else:
+                #Try reading as a two word name, like Mr. Mime
+                tempn = words[1].capitalize() + ' ' + words[2].capitalize()
+                if tempn not in norm_dict:
+                  msg="Invalid input!"
                 else:
-                    #it's GMax
-                    pk = words[2].capitalize()
-                    if pk not in gm_dict:
-                      msg="Invalid input!"
-                    else:
-                      msga = 'Here are the ball catch rates for Gigantamax '+pk
-                      msgb = '\n'.join(map(str,gm_dict.get(pk)))
-                      msg=msga+':\n'+msgb
-                      msg+="Please note that these values may not be completely correct!"
+                  msga = 'Here are the ball catch rates for '+tempn
+                  msgb = '\n'.join(map(str,norm_dict.get(tempn)))
+                  msg=msga+':\n'+msgb
+                  msg+="Please note that these values may not be completely correct!"
+                  
         #output message
         await client.send_message(message.channel, msg)
 
